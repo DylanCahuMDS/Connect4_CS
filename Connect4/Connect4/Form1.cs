@@ -18,12 +18,16 @@ namespace Connect4
 
         private void displaySpacesStart()
         {
+            //for each column
             for (int i = 0; i < 7; i++)
             {
                 //create 7 PictureBoxe[]
                 PictureBox[] col = new PictureBox[6];
+                
+                //for each rows
                 for (int j = 0; j < 6; j++)
                 {
+                    //create the picturebox 
                     col[j] = new PictureBox();
                     col[j].Name = "space" + i + "-" + j;
                     col[j].Size = new Size(100, 100);
