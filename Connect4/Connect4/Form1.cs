@@ -18,21 +18,25 @@ namespace Connect4
 
         private void displaySpacesStart()
         {
+            //create a grid with 7 columns et 6 rows
+            PictureBox[,] col = new PictureBox[7,6];
+
+            //for each column
             for (int i = 0; i < 7; i++)
             {
-                //create 7 PictureBoxe[]
-                PictureBox[] col = new PictureBox[6];
+                //for each row
                 for (int j = 0; j < 6; j++)
                 {
-                    col[j] = new PictureBox();
-                    col[j].Name = "space" + i + "-" + j;
-                    col[j].Size = new Size(100, 100);
-                    col[j].Location = new Point((i * 100),(j * 100));
-                    col[j].Image = Image.FromFile("none.png");
-                    col[j].ImageLocation = "none.png";
-                    col[j].SizeMode = PictureBoxSizeMode.Zoom;
-                    col[j].Click += new EventHandler(col_Click);
-                    this.Controls.Add(col[j]);
+                    //create a new space
+                    col[i,j] = new PictureBox();
+                    col[i, j].Name = "space" + i + "-" + j;
+                    col[i, j].Size = new Size(100, 100);
+                    col[i, j].Location = new Point((i * 100),(j * 100));
+                    col[i, j].Image = Image.FromFile("none.png");
+                    col[i, j].ImageLocation = "none.png";
+                    col[i, j].SizeMode = PictureBoxSizeMode.Zoom;
+                    col[i, j].Click += new EventHandler(col_Click);
+                    this.Controls.Add(col[i, j]);
                 }
             }
         }
@@ -70,7 +74,6 @@ namespace Connect4
         private void ConnectCheck(int numCol, int numRow)
         {
            
-            PictureBox[] col = getCol(numCol);
             
         }
 
