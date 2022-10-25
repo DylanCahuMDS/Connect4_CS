@@ -125,4 +125,3 @@ function checkDirection(player,x,y,dx,dy){
 }
 
 })(jQuery);
-

@@ -1,24 +1,29 @@
+using System.Data.Common;
+using System;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Connect4
 {
     public partial class Form1 : Form
     {
-        private int nbBoxesEmpty;
-        private int nbBoxes;
         private string player = "red";
+        private int largeur = 6;
+        private int hauteur = 5;
+        private PictureBox[,] grid;
 
         public Form1()
         {
             InitializeComponent();
         }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             displaySpacesStart();
+            grid = getGrid();
         }
-
         private void displaySpacesStart()
         {
             //create a grid with 7 columns et 6 rows
@@ -43,7 +48,6 @@ namespace Connect4
                 }
             }
         }
-
         private void displaySpaceColor(int col, int row)
         {
             PictureBox change = (PictureBox)this.Controls.Find("space" + col + "-" + row, true)[0];
@@ -63,7 +67,6 @@ namespace Connect4
                 player = "red";
             }
         }
-
         private PictureBox[,] getGrid()
         {
             PictureBox[,] Array = new PictureBox[7,6];
@@ -76,46 +79,95 @@ namespace Connect4
             }
             return Array;
         }
-
         private void IsWinning(int numCol, int numRow)
         {
-           int count=1;
-            //horizontal
-            if (numCol-1<= 0)count += checkConnect(player,numCol-1,numRow, -1, 0);
-            if (numCol + 1 <= 6) count += checkConnect(player, numCol + 1, numRow, 1, 0);
-            if (count >= 4) win();
-            else count = 1;
-
-            //diagonal up-left/down-right
-            if (numRow - 1 >= 0 && numRow-1 >=0) count += checkConnect(player, numCol-1, numRow - 1, -1, -1);
-            if (numRow + 1 <= 6 && numCol + 1 <= 5) count += checkConnect(player, numCol + 1, numRow + 1, 1, 1);
-            if (count >= 4) win();
-            else count = 1;
-
-            //vertical
-            if (numRow - 1 >= 0) count += checkConnect(player, numCol, numRow - 1, 0, -1);
-            if (numRow + 1 <= 5) count += checkConnect(player, numCol, numRow + 1, 0, 1);
-            if (count >= 4) win();
-            else count = 1;
-
-            //diagonal up-right/down-left
-            if (numRow - 1 >= 0 && numCol + 1 < 6) count += checkConnect(player, numCol - 1, numRow + 1, -1, 1);
-            if (numRow + 1 < 6 && numCol - 1 <= 0) count += checkConnect(player, numCol + 1, numRow - 1, 1, -1);
-            if (count >= 4) win();
-            else count = 1;
+             for (int row = 0; row < hauteur; row++)
+             {
+                 for (int column = 0; column < largeur; column++)
+                 {
+                     if (CheckVertically(row, column)) { win(); }
+                     if (CheckHorizontally(row, column)) { win(); }
+                     if (CheckDiagonallyDown(row, column)) { win(); }
+                     if (CheckDiagonallyUp(row, column)) { win(); }
+                 }
+             }
         }
-
-        private int checkConnect(string player, int numCol, int numRow, int dirCol, int dirRow)
+        /// <summary>
+        /// Looks to see if the given row and column is the starting point for
+        /// four in a row, horizontally.
+        /// </summary>
+        private bool CheckHorizontally(int row, int column)
         {
-            PictureBox[,] grid = getGrid();
-            return grid[numCol, numRow].ImageLocation == (player + ".png") ? (((numCol+dirCol>=0 && numCol+dirCol<7)&&(numRow+dirRow>=0 && numRow+dirRow<7)))?
-                1+checkConnect(player, numCol, numRow, dirCol, dirRow):1:0;
+            // If there aren't even four more spots before leaving the grid,
+            // we know it can't be.
+            if (column + 3 >= largeur) { return false; }
+
+            for (int distance = 0; distance < 4; distance++)
+            {
+                if (grid[row, column + distance].ImageLocation != player + ".png") { return false; }
+            }
+
+            return true;
         }
 
+        /// <summary>
+        /// Looks to see if the given row and column is the starting point for
+        /// four in a row, vertically.
+        /// </summary>
+        private bool CheckVertically(int row, int column)
+        {
+            // If there aren't even four more spots before leaving the grid,
+            // we know it can't be.
+            if (row + 3 >= hauteur) { return false; }
 
+            for (int distance = 0; distance < 4; distance++)
+            {
+                if (grid[row + distance, column].ImageLocation != player +".png") { return false; }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Looks to see if the given row and column is the starting point for
+        /// four in a row, diagonally down.
+        /// </summary>
+        private bool CheckDiagonallyDown(int row, int column)
+        {
+            // If there aren't even four more spots before leaving the grid,
+            // we know it can't be.
+            if (row + 3 >= hauteur) { return false; }
+            if (column + 3 >= largeur) { return false; }
+
+            for (int distance = 0; distance < 4; distance++)
+            {
+                if (grid[row + distance, column + distance].ImageLocation != player + ".png") { return false; }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Looks to see if the given row and column is the starting point for
+        /// four in a row, diagonally up.
+        /// </summary>
+        private bool CheckDiagonallyUp(int row, int column)
+        {
+            // If there aren't even four more spots before leaving the grid,
+            // we know it can't be.
+            if (row - 3 < 0) { return false; }
+            if (column + 3 >= largeur) { return false; }
+
+            for (int distance = 0; distance < 4; distance++)
+            {
+                if (grid[row - distance, column + distance].ImageLocation != player +".png") { return false; }
+            }
+
+            return true;
+        }
+        
         private void win()
         {
-            PictureBox[,] grid = getGrid();
             for (int i = 0; i < 7; i++)
             {
                 for (int j = 0; j < 6; j++)
@@ -124,20 +176,18 @@ namespace Connect4
                 }
             }
         }
-            private void col_Click(object sender, EventArgs e)
+        private void col_Click(object sender, EventArgs e)
         {
             PictureBox col = (PictureBox)sender;
             string name = col.Name;
             int colNumber = Convert.ToInt32(name.Substring(5, 1));
             int rowNumber = 0;
             
-            PictureBox[,] verif = getGrid();
-
-            if (verif[colNumber,0].ImageLocation != "none.png")
+            if (grid[colNumber,0].ImageLocation != "none.png")
             {
                 return;
             }
-            else if (verif[colNumber,5].ImageLocation == "none.png")
+            else if (grid[colNumber,5].ImageLocation == "none.png")
             {
                 displaySpaceColor(colNumber, 5);
                 rowNumber = 5;
@@ -147,7 +197,7 @@ namespace Connect4
 
             for (int i = 0; i < 6; i++)
             {
-                 if (verif[colNumber, i +1].ImageLocation != "none.png")
+                 if (grid[colNumber, i +1].ImageLocation != "none.png")
                  {
                     displaySpaceColor(colNumber, i);
                     rowNumber = i;
