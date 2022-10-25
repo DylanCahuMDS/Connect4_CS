@@ -79,23 +79,20 @@ namespace Connect4
             }
             return Array;
         }
-        private void IsWinning(int numCol, int numRow)
+        private bool IsWinning(int numCol, int numRow)
         {
              for (int row = 0; row < hauteur; row++)
              {
                  for (int column = 0; column < largeur; column++)
                  {
-                     if (CheckVertically(row, column)) { win(); }
-                     if (CheckHorizontally(row, column)) { win(); }
-                     if (CheckDiagonallyDown(row, column)) { win(); }
-                     if (CheckDiagonallyUp(row, column)) { win(); }
+                     if (CheckVertically(row, column)) { return true; }
+                     if (CheckHorizontally(row, column)) { return true; }
+                     if (CheckDiagonallyDown(row, column)) { return true; }
+                     if (CheckDiagonallyUp(row, column)) { return true; }
                  }
              }
+            return false;
         }
-        /// <summary>
-        /// Looks to see if the given row and column is the starting point for
-        /// four in a row, horizontally.
-        /// </summary>
         private bool CheckHorizontally(int row, int column)
         {
             // If there aren't even four more spots before leaving the grid,
@@ -109,11 +106,6 @@ namespace Connect4
 
             return true;
         }
-
-        /// <summary>
-        /// Looks to see if the given row and column is the starting point for
-        /// four in a row, vertically.
-        /// </summary>
         private bool CheckVertically(int row, int column)
         {
             // If there aren't even four more spots before leaving the grid,
@@ -127,11 +119,6 @@ namespace Connect4
 
             return true;
         }
-
-        /// <summary>
-        /// Looks to see if the given row and column is the starting point for
-        /// four in a row, diagonally down.
-        /// </summary>
         private bool CheckDiagonallyDown(int row, int column)
         {
             // If there aren't even four more spots before leaving the grid,
@@ -146,11 +133,6 @@ namespace Connect4
 
             return true;
         }
-
-        /// <summary>
-        /// Looks to see if the given row and column is the starting point for
-        /// four in a row, diagonally up.
-        /// </summary>
         private bool CheckDiagonallyUp(int row, int column)
         {
             // If there aren't even four more spots before leaving the grid,
@@ -187,11 +169,10 @@ namespace Connect4
             {
                 return;
             }
-            else if (grid[colNumber,5].ImageLocation == "none.png")
+            else if (grid[colNumber,hauteur].ImageLocation == "none.png")
             {
-                displaySpaceColor(colNumber, 5);
-                rowNumber = 5;
-                IsWinning(colNumber, rowNumber);
+                displaySpaceColor(colNumber, hauteur);
+                if (IsWinning(colNumber, hauteur))win();
                 return;
             }
 
@@ -201,10 +182,10 @@ namespace Connect4
                  {
                     displaySpaceColor(colNumber, i);
                     rowNumber = i;
-                    break;
+                    if (IsWinning(colNumber, rowNumber))win();
+                    return;
                  }
             }
-            IsWinning(colNumber, rowNumber);
         }
     }
 }
