@@ -40,8 +40,8 @@ namespace Connect4
                     col[i, j].Name = "space" + i + "-" + j;
                     col[i, j].Size = new Size(100, 100);
                     col[i, j].Location = new Point((i * 100),(j * 100));
-                    col[i, j].Image = Image.FromFile("none.png");
                     col[i, j].ImageLocation = "none.png";
+                    col[i, j].Image = Image.FromFile(col[i,j].ImageLocation);
                     col[i, j].SizeMode = PictureBoxSizeMode.Zoom;
                     col[i, j].Click += new EventHandler(col_Click);
                     this.Controls.Add(col[i, j]);
@@ -79,19 +79,20 @@ namespace Connect4
             }
             return Array;
         }
-        private bool IsWinning(int numCol, int numRow)
+        private void IsWinning()
         {
-             for (int row = 0; row < hauteur; row++)
-             {
-                 for (int column = 0; column < largeur; column++)
-                 {
-                     if (CheckVertically(row, column)) { return true; }
-                     if (CheckHorizontally(row, column)) { return true; }
-                     if (CheckDiagonallyDown(row, column)) { return true; }
-                     if (CheckDiagonallyUp(row, column)) { return true; }
-                 }
-             }
-            return false;
+            bool result = false;
+            for (int row = 0; row < hauteur; row++)
+            {
+                for (int column = 0; column < largeur; column++)
+                {
+                    if (CheckVertically(row, column)) { win(); result = true; }
+                    else if (CheckHorizontally(row, column)) { win(); result = true; }
+                    else if (CheckDiagonallyDown(row, column)) { win(); result = true; }
+                    else if (CheckDiagonallyUp(row, column)) { win(); result = true; }
+                }
+            }
+            //return result;
         }
         private bool CheckHorizontally(int row, int column)
         {
@@ -150,13 +151,14 @@ namespace Connect4
         
         private void win()
         {
-            for (int i = 0; i < 7; i++)
+            if (MessageBox.Show("Player " + player + " won! Do you want to restart?", "Restart", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                for (int j = 0; j < 6; j++)
-                {
-                    grid[i,j].Image = Image.FromFile("error.png");
-                }
+                Application.Restart();
             }
+            else
+            {
+                Application.Exit();
+            }   
         }
         private void col_Click(object sender, EventArgs e)
         {
@@ -172,7 +174,8 @@ namespace Connect4
             else if (grid[colNumber,hauteur].ImageLocation == "none.png")
             {
                 displaySpaceColor(colNumber, hauteur);
-                if (IsWinning(colNumber, hauteur))win();
+                //if (IsWinning())win();
+                IsWinning();
                 return;
             }
 
@@ -182,7 +185,8 @@ namespace Connect4
                  {
                     displaySpaceColor(colNumber, i);
                     rowNumber = i;
-                    if (IsWinning(colNumber, rowNumber))win();
+                    //if (IsWinning())win();
+                    IsWinning();
                     return;
                  }
             }
