@@ -81,9 +81,9 @@ namespace Connect4
         }
         private void IsWinning()
         {
-            for (int row = 0; row < hauteur; row++)
+            for (int column = 0; column < 7; column++)
             {
-                for (int column = 0; column < largeur; column++)
+                for (int row = 0; row < 6; row++)
                 {
                     if (CheckVertically(row, column)) { win(); }
                     else if (CheckHorizontally(row, column)) { win(); }
@@ -172,7 +172,7 @@ namespace Connect4
             {
                 displaySpaceColor(colNumber, hauteur);
                 //if (IsWinning())win();
-                IsWinning();
+                //IsWinning();
                 return;
             }
 
@@ -182,7 +182,7 @@ namespace Connect4
                  {
                     displaySpaceColor(colNumber, i);
                     //if (IsWinning())win();
-                    IsWinning();
+                    //IsWinning();
                     return;
                  }
             }
