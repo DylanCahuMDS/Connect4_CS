@@ -58,12 +58,14 @@ namespace Connect4
                 //change to red
                 change.Image = Image.FromFile("red.png");
                 change.ImageLocation = "red.png";
+                IsWinning();
                 player = "yellow";
             }
             else {
                 //change to yellow
                 change.Image = Image.FromFile("yellow.png");
                 change.ImageLocation = "yellow.png";
+                IsWinning();
                 player = "red";
             }
         }
@@ -91,7 +93,6 @@ namespace Connect4
                     else if (CheckDiagonallyUp(row, column)) { win();}
                 }
             }
-            //return result;
         }
         private bool CheckHorizontally(int row, int column)
         {
@@ -171,8 +172,6 @@ namespace Connect4
             else if (grid[colNumber,hauteur].ImageLocation == "none.png")
             {
                 displaySpaceColor(colNumber, hauteur);
-                //if (IsWinning())win();
-                //IsWinning();
                 return;
             }
 
@@ -181,8 +180,6 @@ namespace Connect4
                  if (grid[colNumber, i +1].ImageLocation != "none.png")
                  {
                     displaySpaceColor(colNumber, i);
-                    //if (IsWinning())win();
-                    //IsWinning();
                     return;
                  }
             }
