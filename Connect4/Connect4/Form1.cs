@@ -124,8 +124,8 @@ namespace Connect4
         {
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
-            if (row + 3 >= hauteur) { return false; }
-            if (column + 3 >= largeur) { return false; }
+            if (row + 3 > hauteur) { return false; }
+            if (column + 3 > largeur) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
@@ -139,7 +139,7 @@ namespace Connect4
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
             if (row - 3 < 0) { return false; }
-            if (column + 3 >= largeur) { return false; }
+            if (column + 3 > largeur) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
