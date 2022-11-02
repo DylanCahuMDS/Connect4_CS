@@ -27,7 +27,7 @@ namespace Connect4
         private void displaySpacesStart()
         {
             //create a grid with 7 columns et 6 rows
-            PictureBox[,] col = new PictureBox[7,6];
+            PictureBox[,] emptyGrid = new PictureBox[7,6];
 
             //for each column
             for (int i = 0; i < 7; i++)
@@ -36,15 +36,15 @@ namespace Connect4
                 for (int j = 0; j < 6; j++)
                 {
                     //create a new space
-                    col[i,j] = new PictureBox();
-                    col[i, j].Name = "space" + i + "-" + j;
-                    col[i, j].Size = new Size(100, 100);
-                    col[i, j].Location = new Point((i * 100),(j * 100));
-                    col[i, j].ImageLocation = "none.png";
-                    col[i, j].Image = Image.FromFile(col[i,j].ImageLocation);
-                    col[i, j].SizeMode = PictureBoxSizeMode.Zoom;
-                    col[i, j].Click += new EventHandler(col_Click);
-                    this.Controls.Add(col[i, j]);
+                    emptyGrid[i,j] = new PictureBox();
+                    emptyGrid[i, j].Name = "space" + i + "-" + j;
+                    emptyGrid[i, j].Size = new Size(100, 100);
+                    emptyGrid[i, j].Location = new Point((i * 100),(j * 100));
+                    emptyGrid[i, j].ImageLocation = "none.png";
+                    emptyGrid[i, j].Image = Image.FromFile(emptyGrid[i,j].ImageLocation);
+                    emptyGrid[i, j].SizeMode = PictureBoxSizeMode.Zoom;
+                    emptyGrid[i, j].Click += new EventHandler(col_Click);
+                    this.Controls.Add(emptyGrid[i, j]);
                 }
             }
         }
@@ -81,15 +81,14 @@ namespace Connect4
         }
         private void IsWinning()
         {
-            bool result = false;
             for (int row = 0; row < hauteur; row++)
             {
                 for (int column = 0; column < largeur; column++)
                 {
-                    if (CheckVertically(row, column)) { win(); result = true; }
-                    else if (CheckHorizontally(row, column)) { win(); result = true; }
-                    else if (CheckDiagonallyDown(row, column)) { win(); result = true; }
-                    else if (CheckDiagonallyUp(row, column)) { win(); result = true; }
+                    if (CheckVertically(row, column)) { win(); }
+                    else if (CheckHorizontally(row, column)) { win(); }
+                    else if (CheckDiagonallyDown(row, column)) { win();}
+                    else if (CheckDiagonallyUp(row, column)) { win();}
                 }
             }
             //return result;
@@ -98,11 +97,11 @@ namespace Connect4
         {
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
-            if (column + 3 >= largeur) { return false; }
+            if (column + 3 > largeur) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
-                if (grid[row, column + distance].ImageLocation != player + ".png") { return false; }
+                if (grid[column + distance, row].ImageLocation != player + ".png") { return false; }
             }
 
             return true;
@@ -111,11 +110,11 @@ namespace Connect4
         {
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
-            if (row + 3 >= hauteur) { return false; }
+            if (row + 3 > hauteur) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
-                if (grid[row + distance, column].ImageLocation != player +".png") { return false; }
+                if (grid[column, row + distance].ImageLocation != player +".png") { return false; }
             }
 
             return true;
@@ -129,7 +128,7 @@ namespace Connect4
 
             for (int distance = 0; distance < 4; distance++)
             {
-                if (grid[row + distance, column + distance].ImageLocation != player + ".png") { return false; }
+                if (grid[column + distance, row + distance].ImageLocation != player + ".png") { return false; }
             }
 
             return true;
@@ -143,12 +142,11 @@ namespace Connect4
 
             for (int distance = 0; distance < 4; distance++)
             {
-                if (grid[row - distance, column + distance].ImageLocation != player +".png") { return false; }
+                if (grid[column + distance, row - distance].ImageLocation != player +".png") { return false; }
             }
 
             return true;
         }
-        
         private void win()
         {
             if (MessageBox.Show("Player " + player + " won! Do you want to restart?", "Restart", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -165,7 +163,6 @@ namespace Connect4
             PictureBox col = (PictureBox)sender;
             string name = col.Name;
             int colNumber = Convert.ToInt32(name.Substring(5, 1));
-            int rowNumber = 0;
             
             if (grid[colNumber,0].ImageLocation != "none.png")
             {
@@ -184,7 +181,6 @@ namespace Connect4
                  if (grid[colNumber, i +1].ImageLocation != "none.png")
                  {
                     displaySpaceColor(colNumber, i);
-                    rowNumber = i;
                     //if (IsWinning())win();
                     IsWinning();
                     return;
