@@ -11,8 +11,8 @@ namespace Connect4
     public partial class Form1 : Form
     {
         private string player = "red";
-        private int largeur = 6;
-        private int hauteur = 5;
+        private int width = 6; //consider +1 because first collumn is on index 0
+        private int heigth = 5; //consider +1 because first row is on index 0
         private PictureBox[,] grid;
 
         public Form1()
@@ -27,13 +27,13 @@ namespace Connect4
         private void displaySpacesStart()
         {
             //create a grid with 7 columns et 6 rows
-            PictureBox[,] emptyGrid = new PictureBox[7,6];
+            PictureBox[,] emptyGrid = new PictureBox[width +1,heigth+1];
 
             //for each column
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < width +1; i++)
             {
                 //for each row
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < heigth +1; j++)
                 {
                     //create a new space
                     emptyGrid[i,j] = new PictureBox();
@@ -71,10 +71,10 @@ namespace Connect4
         }
         private PictureBox[,] getGrid()
         {
-            PictureBox[,] Array = new PictureBox[7,6];
-            for (int i = 0; i < 7; i++)
+            PictureBox[,] Array = new PictureBox[width + 1, heigth + 1];
+            for (int i = 0; i < width +1; i++)
             {
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < heigth +1; j++)
                 {
                     Array[i,j] = (PictureBox)this.Controls.Find("space" + i + "-" + j, true)[0];
                 }
@@ -83,9 +83,9 @@ namespace Connect4
         }
         private void IsWinning()
         {
-            for (int column = 0; column < 7; column++)
+            for (int column = 0; column < width+1; column++)
             {
-                for (int row = 0; row < 6; row++)
+                for (int row = 0; row < heigth+1; row++)
                 {
                     if (CheckVertically(row, column)) { win(); }
                     else if (CheckHorizontally(row, column)) { win(); }
@@ -98,7 +98,7 @@ namespace Connect4
         {
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
-            if (column + 3 > largeur) { return false; }
+            if (column + 3 > width) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
@@ -111,7 +111,7 @@ namespace Connect4
         {
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
-            if (row + 3 > hauteur) { return false; }
+            if (row + 3 > heigth) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
@@ -124,8 +124,8 @@ namespace Connect4
         {
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
-            if (row + 3 > hauteur) { return false; }
-            if (column + 3 > largeur) { return false; }
+            if (row + 3 > heigth) { return false; }
+            if (column + 3 > width) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
@@ -139,7 +139,7 @@ namespace Connect4
             // If there aren't even four more spots before leaving the grid,
             // we know it can't be.
             if (row - 3 < 0) { return false; }
-            if (column + 3 > largeur) { return false; }
+            if (column + 3 > width) { return false; }
 
             for (int distance = 0; distance < 4; distance++)
             {
@@ -169,13 +169,13 @@ namespace Connect4
             {
                 return;
             }
-            else if (grid[colNumber,hauteur].ImageLocation == "none.png")
+            else if (grid[colNumber,heigth].ImageLocation == "none.png")
             {
-                displaySpaceColor(colNumber, hauteur);
+                displaySpaceColor(colNumber, heigth);
                 return;
             }
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < heigth +1; i++)
             {
                  if (grid[colNumber, i +1].ImageLocation != "none.png")
                  {
