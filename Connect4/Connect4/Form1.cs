@@ -163,8 +163,16 @@ namespace Connect4
         {
             PictureBox col = (PictureBox)sender;
             string name = col.Name;
-            int colNumber = Convert.ToInt32(name.Substring(5, 1));
-            
+            int colNumber=0;
+            //if name lenth is up to 8, it's a single digit number
+            if (name.Length > 8 && width > 9)
+            {
+                colNumber = int.Parse(name.Substring(5, 2));
+            }
+            else
+            {
+                colNumber = int.Parse(name.Substring(5, 1));
+            }
             if (grid[colNumber,0].ImageLocation != "none.png")
             {
                 return;
