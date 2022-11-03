@@ -14,6 +14,7 @@ namespace Connect4
         private int width = 6; //consider +1 because first collumn is on index 0
         private int heigth = 5; //consider +1 because first row is on index 0
         private PictureBox[,] grid;
+        private int turn = 0;
 
         public Form1()
         {
@@ -58,6 +59,7 @@ namespace Connect4
                 //change to red
                 change.Image = Image.FromFile("red.png");
                 change.ImageLocation = "red.png";
+                turn++;
                 IsWinning();
                 player = "yellow";
             }
@@ -65,6 +67,7 @@ namespace Connect4
                 //change to yellow
                 change.Image = Image.FromFile("yellow.png");
                 change.ImageLocation = "yellow.png";
+                turn++;
                 IsWinning();
                 player = "red";
             }
@@ -83,6 +86,18 @@ namespace Connect4
         }
         private void IsWinning()
         {
+            if (turn >= (heigth + 1) * (width + 1))
+            {
+                if (MessageBox.Show("Fail, grid full ! Do you want to restart?", "Restart", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    Application.Restart();
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            }
+
             for (int column = 0; column < width+1; column++)
             {
                 for (int row = 0; row < heigth+1; row++)
